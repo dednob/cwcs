@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'permission',
     'areaofwork',
     'projects',
-    'campaign',
     'donate',
     'gallery',
     'contact'
