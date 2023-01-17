@@ -37,7 +37,7 @@ class ProjectsListSerializer(serializers.ModelSerializer):
 
 
 
-class ProjectsCampaignSerializer(serializers.ModelSerializer):
+class ProjectsGallerySerializer(serializers.ModelSerializer):
     class Meta:
         model = Projects
-        fields = ['id', 'title', 'slug']
+        fields = ['title']

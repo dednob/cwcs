@@ -14,9 +14,9 @@ def generate_filename(instance, filename):
 
 
 class Gallery(models.Model):
-    title = models.CharField(max_length=500)
-    details = models.TextField(null=True, blank=True)
-    slug = models.SlugField(max_length=500, null=True, unique=True)
+    # title = models.CharField(max_length=500)
+    # details = models.TextField(null=True, blank=True)
+    # slug = models.SlugField(max_length=500, null=True, unique=True)
     image = models.ImageField(upload_to=generate_filename, null=True)
     # project = models.ForeignKey(Projects, default=None, on_delete=models.CASCADE, related_name="gallery")
     project = models.ForeignKey(Projects, default=None, on_delete=models.CASCADE, related_name="gallery")

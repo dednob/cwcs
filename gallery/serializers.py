@@ -1,6 +1,7 @@
 from rest_framework import serializers
-# from campaign.serializers import *
+from projects.serializers import *
 from .models import Gallery
+from projects.models import Projects
 
 # from campaign.models import *
 
@@ -14,11 +15,11 @@ class GallerySerializer(serializers.ModelSerializer):
 
 class GalleryReadSerializer(serializers.ModelSerializer):
     
-    campaign = serializers.SerializerMethodField('camp_title', read_only=True)
+    project = serializers.SerializerMethodField('proj_title', read_only=True)
 
-    # def camp_title(self, obj):
-    #     campaign_instance = Campaigns.objects.get(id = obj.campaign.id)
-    #     return CampaignsGallerySerializer(campaign_instance).data
+    def proj_title(self, obj):
+        project_instance = Projects.objects.get(id = obj.project.id)
+        return ProjectsGallerySerializer(project_instance).data
     
     class Meta:
         model = Gallery
