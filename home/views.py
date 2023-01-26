@@ -7,14 +7,37 @@ from django.utils.text import slugify
 import base64
 from django.core.files.base import ContentFile
 from areaofwork.models import Areaofwork
+
 from projects.models import Projects
+from areaofwork.models import Areaofwork
+from home.models import Home
+from gallery.models import Gallery
+from contact.models import Contact
+
 from rest_framework import status
 
 
 @api_view(['GET'])
-def home_details(request):
+def home_view(request):
     try:
         home = Home.objects.get(active=True)
+        serializer = HomeSerializer(home)
+        return Response({
+            'code': status.HTTP_200_OK,
+            'response': "Received Data Successfully",
+            "data": serializer.data
+        })
+    except Exception as e:
+        return Response({
+            'code': status.HTTP_400_BAD_REQUEST,
+            'response': "Data not Found",
+            'error': str(e)
+        })
+
+@api_view(['GET'])
+def home_details(request, pk):
+    try:
+        home = Home.objects.get(id = pk)
         serializer = HomeSerializer(home)
         return Response({
             'code': status.HTTP_200_OK,
@@ -103,6 +126,34 @@ def create_home(request):
             img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
             data['image'] = img_file
 
+        if 'top_banner_image' in data:
+            print("ami top banner")
+            fmt, img_str = str(data['top_banner_image']).split(';base64,')
+            ext = fmt.split('/')[-1]
+            img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+            data['top_banner_image'] = img_file
+        
+        if 'mid_banner_image' in data:
+            print("ami mid_banner_image")
+            fmt, img_str = str(data['mid_banner_image']).split(';base64,')
+            ext = fmt.split('/')[-1]
+            img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+            data['mid_banner_image'] = img_file
+        
+        if 'mid_layer_image' in data:
+            print("ami mid_layer_image")
+            fmt, img_str = str(data['mid_layer_image']).split(';base64,')
+            ext = fmt.split('/')[-1]
+            img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+            data['mid_layer_image'] = img_file
+        
+        if 'footer_image' in data:
+            print("ami footer_image")
+            fmt, img_str = str(data['footer_image']).split(';base64,')
+            ext = fmt.split('/')[-1]
+            img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+            data['footer_image'] = img_file
+
         slug = slugify(data['title'])
         suffix = 1
 
@@ -142,14 +193,56 @@ def create_home(request):
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
-def update(request, slugkey):
+def update(request, pk):
     try:
         data = request.data
+        home = Home.objects.get(id=pk)
+
+        if ('image' in data and data['image'] == None) and home.image != None:
+            data.pop('image')
+        
+        if ('top_banner_image' in data and data['top_banner_image'] == None) and home.image != None:
+            data.pop('top_banner_image')
+        
+        if ('mid_banner_image' in data and data['mid_banner_image'] == None) and home.image != None:
+            data.pop('mid_banner_image')
+        
+        if ('mid_layer_image' in data and data['mid_layer_image'] == None) and home.image != None:
+            data.pop('mid_layer_image')
+        
+        if ('footer_image' in data and data['footer_image'] == None) and home.image != None:
+            data.pop('footer_image')
+
+
         if 'image' in data:
             fmt, img_str = str(data['image']).split(';base64,')
             ext = fmt.split('/')[-1]
             img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
             data['image'] = img_file
+
+        if 'top_banner_image' in data:
+            fmt, img_str = str(data['top_banner_image']).split(';base64,')
+            ext = fmt.split('/')[-1]
+            img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+            data['top_banner_image'] = img_file
+        
+        if 'mid_banner_image' in data:
+            fmt, img_str = str(data['mid_banner_image']).split(';base64,')
+            ext = fmt.split('/')[-1]
+            img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+            data['mid_banner_image'] = img_file
+        
+        if 'mid_layer_image' in data:
+            fmt, img_str = str(data['mid_layer_image']).split(';base64,')
+            ext = fmt.split('/')[-1]
+            img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+            data['mid_layer_image'] = img_file
+        
+        if 'footer_image' in data:
+            fmt, img_str = str(data['footer_image']).split(';base64,')
+            ext = fmt.split('/')[-1]
+            img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+            data['footer_image'] = img_file
 
         slug = slugify(data['title'])
         suffix = 1
@@ -167,7 +260,7 @@ def update(request, slugkey):
 
         data['slug'] = slug
 
-        home = Home.objects.get(slug=slugkey)
+        
         serializer = HomeSerializer(home, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -217,5 +310,28 @@ def delete_home(request, slug):
         return Response({
             'code': status.HTTP_400_BAD_REQUEST,
             'response': "Data not Found",
+            'error': str(e)
+        })
+
+@api_view(['GET'])
+def work_list_count(request):
+    try:
+        areaofwork_count = Areaofwork.objects.all().count()
+        project_count = Projects.objects.all().count()
+        gallery_count = Gallery.objects.all().count()
+        contact_count = Contact.objects.all().count()
+        home_count = Home.objects.all().count()
+        return Response({
+            'Response': 'Count received successfully',
+            'Areaofwork': areaofwork_count,
+            'projects': project_count,
+            'gallery': gallery_count,
+            'contact': contact_count,
+            'home': home_count
+        })
+    except Exception as e:
+        return Response({
+            'code': status.HTTP_400_BAD_REQUEST,
+            'response': "Data not found",
             'error': str(e)
         })
