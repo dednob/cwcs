@@ -32,10 +32,10 @@ def list(request):
 
 
 @api_view(['GET'])
-def gallery_detail(request, slug):
+def gallery_detail(request, pk):
     try:
-        if slug is not None:
-            gallery = Gallery.objects.get(slug=slug)
+        if pk is not None:
+            gallery = Gallery.objects.get(id=pk)
             serializer = GalleryReadSerializer(gallery)
             return Response({
                 'code': status.HTTP_200_OK,
@@ -52,9 +52,9 @@ def gallery_detail(request, slug):
 
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
-def gallery_by_camp(request, slug):
+def gallery_by_proj(request, slug):
     try:
-        gallery = Gallery.objects.filter(campaign__slug=slug)
+        gallery = Gallery.objects.filter(project__slug=slug)
         serializer = GallerySerializer(gallery, many=True)
         return Response({
             'code': status.HTTP_200_OK,
@@ -69,23 +69,23 @@ def gallery_by_camp(request, slug):
         })
 
 
-@api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-def gallery_by_camp_slider(request, slug):
-    try:
-        gallery = Gallery.objects.filter(campaign__slug=slug)
-        serializer = GallerySerializer_slider(gallery, many=True)
-        return Response({
-            'code': status.HTTP_200_OK,
-            'response': "Received Data Successfully",
-            "data": serializer.data
-        })
-    except Exception as e:
-        return Response({
-            'code': status.HTTP_400_BAD_REQUEST,
-            'response': "Data not Found",
-            'error': str(e)
-        })
+# @api_view(['GET'])
+# # @permission_classes([IsAuthenticated])
+# def gallery_by_camp_slider(request, slug):
+#     try:
+#         gallery = Gallery.objects.filter(project__slug=slug)
+#         serializer = GallerySerializer_slider(gallery, many=True)
+#         return Response({
+#             'code': status.HTTP_200_OK,
+#             'response': "Received Data Successfully",
+#             "data": serializer.data
+#         })
+#     except Exception as e:
+#         return Response({
+#             'code': status.HTTP_400_BAD_REQUEST,
+#             'response': "Data not Found",
+#             'error': str(e)
+#         })
 
 
 # @api_view(['GET'])
@@ -108,19 +108,19 @@ def upload(request):
             img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
             gallery_data['image'] = img_file
 
-        # slug = slugify(gallery_data['title'])
-        suffix = 1
-        if Gallery.objects.filter(title__exact=gallery_data['title']).exists():
-            count = Gallery.objects.filter(title__exact=gallery_data['title']).count()
-            print(count)
-            suffix += count
-            print("yes")
-            slug = "%s-%s" % (slugify(gallery_data['title']), suffix)
+        # # slug = slugify(gallery_data['title'])
+        # suffix = 1
+        # if Gallery.objects.filter(title__exact=gallery_data['title']).exists():
+        #     count = Gallery.objects.filter(title__exact=gallery_data['title']).count()
+        #     print(count)
+        #     suffix += count
+        #     print("yes")
+        #     slug = "%s-%s" % (slugify(gallery_data['title']), suffix)
 
-        else:
-            slug = "%s-%s" % (slugify(gallery_data['title']), suffix)
+        # else:
+        #     slug = "%s-%s" % (slugify(gallery_data['title']), suffix)
 
-        gallery_data['slug'] = slug
+        # gallery_data['slug'] = slug
 
         serializer = GallerySerializer(data=gallery_data)
         print(serializer)
@@ -147,10 +147,10 @@ def upload(request):
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
-def update(request, slugkey):
+def update(request, pk):
     try:
         gallery_data = request.data
-        gallery = Gallery.objects.get(slug=slugkey)
+        gallery = Gallery.objects.get(id=pk)
         if ('image' in gallery_data and gallery_data['image'] == None) and gallery.image != None:
             gallery_data.pop('image')
 
@@ -161,17 +161,17 @@ def update(request, slugkey):
             gallery_data['image'] = img_file
 
         # slug = slugify(gallery_data['title'])
-        suffix = 1
-        if Gallery.objects.filter(title__exact=gallery_data['title']).exists():
-            count = Gallery.objects.filter(title__exact=gallery_data['title']).count()
-            print(count)
-            suffix += count
-            print("yes")
-            slug = "%s-%s" % (slugify(gallery_data['title']), suffix)
+        # suffix = 1
+        # if Gallery.objects.filter(title__exact=gallery_data['title']).exists():
+        #     count = Gallery.objects.filter(title__exact=gallery_data['title']).count()
+        #     print(count)
+        #     suffix += count
+        #     print("yes")
+        #     slug = "%s-%s" % (slugify(gallery_data['title']), suffix)
 
-        else:
-            slug = "%s-%s" % (slugify(gallery_data['title']), suffix)
-        gallery_data['slug'] = slug
+        # else:
+        #     slug = "%s-%s" % (slugify(gallery_data['title']), suffix)
+        # gallery_data['slug'] = slug
 
         serializer = GallerySerializer(gallery, data=gallery_data, partial=True)
         if serializer.is_valid():

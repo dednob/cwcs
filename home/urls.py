@@ -14,5 +14,6 @@ urlpatterns = [
     path('update/<int:pk>', views.update),
     # path('partialupdate/<int:pk>', views.partial_update_home),
     path('delete/<str:slug>', views.delete_home),
+    path('count/', views.work_list_count),
 
 ]
