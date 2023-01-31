@@ -13,6 +13,7 @@ from areaofwork.models import Areaofwork
 from home.models import Home
 from gallery.models import Gallery
 from contact.models import Contact
+from publications.models import Publications
 
 from rest_framework import status
 
@@ -321,13 +322,17 @@ def work_list_count(request):
         gallery_count = Gallery.objects.all().count()
         contact_count = Contact.objects.all().count()
         home_count = Home.objects.all().count()
+        publication_count  = Publications.objects.all().count()
         return Response({
             'Response': 'Count received successfully',
             'Areaofwork': areaofwork_count,
             'projects': project_count,
             'gallery': gallery_count,
             'contact': contact_count,
-            'home': home_count
+            'home': home_count,
+            'research' : publication_count
+            
+
         })
     except Exception as e:
         return Response({
