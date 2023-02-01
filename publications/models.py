@@ -12,9 +12,17 @@ def generate_filename(instance, filename):
     new_filename = "cwcspublications_%s.%s" % (uuid.uuid4(), extension)
     return new_filename
 
+def generate_imagename(instance, filename):
+    extension = filename.split('.')[-1]
+    new_filename = "cwcspublications_%s.%s" % (uuid.uuid4(), extension)
+    return new_filename
+
 
 class Publications(models.Model):
     author_name = models.CharField(max_length=500, null = True, blank=True)
+    paper_title = models.CharField(max_length=500, null = True, blank = True)
+    book_banner_image = models.ImageField(upload_to=generate_imagename, null=True)
+
     # details = models.TextField(null=True, blank=True)
     # slug = models.SlugField(max_length=500, null=True, unique=True)
     pdf = models.FileField(upload_to=generate_filename, null=True)

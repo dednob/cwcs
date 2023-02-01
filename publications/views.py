@@ -107,6 +107,12 @@ def upload(request):
             ext = fmt.split('/')[-1]
             pdf_file = ContentFile(base64.b64decode(pdf_str), name='temp.' + ext)
             pdf_data['pdf'] = pdf_file
+        
+        if 'book_banner_image' in pdf_data and pdf_data['book_banner_image'] != None:
+            fmt, img_str = str(pdf_data['book_banner_image']).split(';base64,')
+            ext = fmt.split('/')[-1]
+            img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+            pdf_data['book_banner_image'] = img_file
 
         # # slug = slugify(gallery_data['title'])
         # suffix = 1
@@ -154,6 +160,9 @@ def update(request, pk):
 
         if ('pdf' in pdf_data and pdf_data['pdf'] == None) and publication.pdf != None:
             pdf_data.pop('pdf')
+        
+        if ('book_banner_image' in pdf_data and pdf_data['book_banner_image'] == None) and publication.book_banner_image != None:
+            pdf_data.pop('book_banner_image')
 
         
         if 'pdf' in pdf_data and pdf_data['pdf'] != None:
@@ -161,6 +170,12 @@ def update(request, pk):
             ext = fmt.split('/')[-1]
             pdf_file = ContentFile(base64.b64decode(pdf_str), name='temp.' + ext)
             pdf_data['pdf'] = pdf_file
+
+        if 'book_banner_image' in pdf_data and pdf_data['book_banner_image'] != None:
+            fmt, img_str = str(pdf_data['book_banner_image']).split(';base64,')
+            ext = fmt.split('/')[-1]
+            img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+            pdf_data['book_banner_image'] = img_file
 
         # slug = slugify(gallery_data['title'])
         # suffix = 1
