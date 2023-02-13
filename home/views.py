@@ -121,18 +121,18 @@ def experience_details(request):
 def create_home(request):
     try:
         data = request.data
-        if 'image' in data:
-            fmt, img_str = str(data['image']).split(';base64,')
-            ext = fmt.split('/')[-1]
-            img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
-            data['image'] = img_file
+        # if 'image' in data:
+        #     fmt, img_str = str(data['image']).split(';base64,')
+        #     ext = fmt.split('/')[-1]
+        #     img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+        #     data['image'] = img_file
 
-        if 'top_banner_image' in data:
-            print("ami top banner")
-            fmt, img_str = str(data['top_banner_image']).split(';base64,')
-            ext = fmt.split('/')[-1]
-            img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
-            data['top_banner_image'] = img_file
+        # if 'top_banner_image' in data:
+        #     print("ami top banner")
+        #     fmt, img_str = str(data['top_banner_image']).split(';base64,')
+        #     ext = fmt.split('/')[-1]
+        #     img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+        #     data['top_banner_image'] = img_file
         
         if 'mid_banner_image' in data:
             print("ami mid_banner_image")
@@ -155,20 +155,20 @@ def create_home(request):
             img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
             data['footer_image'] = img_file
 
-        slug = slugify(data['title'])
-        suffix = 1
+        # slug = slugify(data['title'])
+        # suffix = 1
 
-        if Home.objects.filter(title__exact=data['title']).exists():
-            count = Home.objects.filter(title__exact=data['title']).count()
-            print(count)
-            suffix += count
-            print("yes")
-            slug = "%s-%s" % (slugify(data['title']), suffix)
+        # if Home.objects.filter(title__exact=data['title']).exists():
+        #     count = Home.objects.filter(title__exact=data['title']).count()
+        #     print(count)
+        #     suffix += count
+        #     print("yes")
+        #     slug = "%s-%s" % (slugify(data['title']), suffix)
 
-        else:
-            slug = "%s-%s" % (slugify(data['title']), suffix)
+        # else:
+        #     slug = "%s-%s" % (slugify(data['title']), suffix)
 
-        data['slug'] = slug
+        # data['slug'] = slug
         serializer = HomeSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -199,11 +199,11 @@ def update(request, pk):
         data = request.data
         home = Home.objects.get(id=pk)
 
-        if ('image' in data and data['image'] == None) and home.image != None:
-            data.pop('image')
+        # if ('image' in data and data['image'] == None) and home.image != None:
+        #     data.pop('image')
         
-        if ('top_banner_image' in data and data['top_banner_image'] == None) and home.image != None:
-            data.pop('top_banner_image')
+        # if ('top_banner_image' in data and data['top_banner_image'] == None) and home.image != None:
+        #     data.pop('top_banner_image')
         
         if ('mid_banner_image' in data and data['mid_banner_image'] == None) and home.image != None:
             data.pop('mid_banner_image')
@@ -215,17 +215,17 @@ def update(request, pk):
             data.pop('footer_image')
 
 
-        if 'image' in data:
-            fmt, img_str = str(data['image']).split(';base64,')
-            ext = fmt.split('/')[-1]
-            img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
-            data['image'] = img_file
+        # if 'image' in data:
+        #     fmt, img_str = str(data['image']).split(';base64,')
+        #     ext = fmt.split('/')[-1]
+        #     img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+        #     data['image'] = img_file
 
-        if 'top_banner_image' in data:
-            fmt, img_str = str(data['top_banner_image']).split(';base64,')
-            ext = fmt.split('/')[-1]
-            img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
-            data['top_banner_image'] = img_file
+        # if 'top_banner_image' in data:
+        #     fmt, img_str = str(data['top_banner_image']).split(';base64,')
+        #     ext = fmt.split('/')[-1]
+        #     img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
+        #     data['top_banner_image'] = img_file
         
         if 'mid_banner_image' in data:
             fmt, img_str = str(data['mid_banner_image']).split(';base64,')
@@ -245,21 +245,21 @@ def update(request, pk):
             img_file = ContentFile(base64.b64decode(img_str), name='temp.' + ext)
             data['footer_image'] = img_file
 
-        slug = slugify(data['title'])
-        suffix = 1
+        # slug = slugify(data['title'])
+        # suffix = 1
 
-        if Home.objects.filter(title__exact=data['title']).exists():
-            print("yes")
-            count = Home.objects.filter(title__exact=data['title']).count()
-            print(count)
-            suffix += count
-            print("yes")
-            slug = "%s-%s" % (slugify(data['title']), suffix)
+        # if Home.objects.filter(title__exact=data['title']).exists():
+        #     print("yes")
+        #     count = Home.objects.filter(title__exact=data['title']).count()
+        #     print(count)
+        #     suffix += count
+        #     print("yes")
+        #     slug = "%s-%s" % (slugify(data['title']), suffix)
 
-        else:
-            slug = "%s-%s" % (slugify(data['title']), suffix)
+        # else:
+        #     slug = "%s-%s" % (slugify(data['title']), suffix)
 
-        data['slug'] = slug
+        # data['slug'] = slug
 
         
         serializer = HomeSerializer(home, data=data, partial=True)
@@ -299,9 +299,9 @@ def update(request, pk):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def delete_home(request, slug):
+def delete_home(request, pk):
     try:
-        home = Home.objects.get(slug=slug)
+        home = Home.objects.get(id=pk)
         home.delete()
         return Response({
             'code': status.HTTP_200_OK,
